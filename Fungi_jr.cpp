@@ -121,6 +121,11 @@ const uint8_t PROGMEM zsoft[] = {
 0x09, 0x0d, 0x0b, 0x09, 0x00, 0x04, 0x04, 0x00, 0x0a, 0x0b, 0x0b, 0x05, 0x00, 0x06, 0x09, 0x09, 0x06, 0x00, 0x0f, 0x05, 0x05, 0x01, 0x00, 0x01, 0x0f, 0x01, 0x00, 0x0b, 0x00, 0x05, 0x08, 0x08, 0x05, 
 };
 
+const uint8_t PROGMEM happy[] = {
+0x00, 0x00, 0xf8, 0xfc, 0x1c, 0x0c, 0x44, 0x04, 0x04, 0x44, 0x0c, 0x1c, 0xfc, 0xf8, 0x00, 0x00, 
+0x00, 0x00, 0x07, 0x0f, 0x0e, 0x0c, 0x19, 0x3a, 0x3a, 0x19, 0x0c, 0x0e, 0x0f, 0x07, 0x00, 0x00, 
+};
+
 //init playfield: 0=wall,1=ground,2=platform,3=ladder,4=laddertop,5=spout,6=pipe,7=pipetop,8=null
 int playfield[] = {
 0,0,0,0,5,6,6,6,6,6,7,7,0,0,
@@ -134,7 +139,7 @@ int playfield[] = {
 };
 
 //init values
-int score = 0;
+int score = 98;
 int water_tank_level = 0;
 int player_lives = 3;
 int x = 0; int y = 0; //used for loops that need to change x,y values
@@ -142,6 +147,8 @@ bool water_collected = false;
 long frame_counter = 0;
 bool water_tank_animation = false; //filling the tank
 bool water_tank_animation_2 = false; //emptying the tank
+
+bool score_overflow = false;
 
 int screen_mode = 0; //0=titlescreen,1=game
 int titlescreen_x = 0;
@@ -423,17 +430,22 @@ void loop() {
   arduboy.drawBitmap((128/2)-(78/2), gameover_y+2, gameovermask, 78, 9, BLACK);
   }
   
-  //draw score
+  //draw scorez
   arduboy.setCursor(114,56);
   if (water_tank_animation == false) {
     if (score < 10) { arduboy.print("0"+String(score)); } else { arduboy.print(score); }
   }
+  
+  if (score == 100) { score = 0; score_overflow = true; }
+  
+  //draw little :) for overflowing score counter (winning)
+  if (score_overflow == true) { arduboy.drawBitmap(112, 41, happy, 16, 16, WHITE); }
 
   //increment frame counter
   frame_counter++;
   }
   else if (screen_mode == 0) {
-    if (arduboy.justReleased(A_BUTTON)) {screen_mode = 1; reset(); player_lives = 3; water_tank_level = 0; level = 0;}
+    if (arduboy.justReleased(A_BUTTON)) {screen_mode = 1; reset(); player_lives = 3; water_tank_level = 0; level = 0; score = 0; score_overflow = false; }
     
     if (titlescreen_x == 1) { titlescreen_direction = 'W'; }
     if (titlescreen_x == -1) { titlescreen_direction = 'E'; }
