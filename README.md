@@ -11,6 +11,6 @@ Added a win condition, overflow the score counter to see the little reward.
 Fixed some bugs
 
 ## Known Bugs
-Sometimes the score stops drawing most likely as a resault of the animation plays when points are scored. (not replicatable)
+Sometimes the score stops drawing most likely as a resault of the animation plays when points are scored. (no consitant replication)
 
-Sometimes the score gives too little or too many points most likely cause of the water tank emptying animation. (not replicatable)
+Sometimes the score gives too little or too many points most likely cause of the water tank emptying animation. (no consitant replication)
